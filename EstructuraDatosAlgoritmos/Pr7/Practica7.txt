@@ -1,0 +1,5 @@
+Almacenar en esta carpeta el código fuente correspondiente a la práctica nº 7.
+----
+Emmagatzemar en aquesta carpeta el codi font corresponent a la pràctica nº 7.
+----
+Store in this folder the source code corresponding to practice # 7.

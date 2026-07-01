@@ -1,0 +1,106 @@
+/**
+ * @file testEjemplo.cpp
+ * @brief Material de la Practica 4 de EDA (GIM).
+ * 
+ * Genera los datos (vertices) para dibujar un cuadrado con gnuplot
+ *
+ * @author Jesus Albert
+ * @date 13/11/2024
+ * @version 1.1
+ */
+ 
+ /* Ordenes para gnuplot:
+	reset session
+    set size ratio -1
+	plot "cuadrado.txt" with vectors nohead
+*/
+
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include "ubicacion.h"
+
+using namespace std;
+
+const string NOM_SALIDA = "data/triangulo.txt"; //< Archivo de salida
+const int X_INI = 50; ///< Posicion x de la esquina inf. izq. del cuadrado
+const int Y_INI = 50; ///< Posicion y de la esquina inf. izq. del cuadrado
+const int TAM = 100; ///< Tamano del lado del cuadrado
+
+void GeneraCuadrado(double, ofstream&);
+void GeneraTriangulo(double, ofstream&);
+
+/*
+ * Programa principal, dibujar cuadrado de 100x100
+ */
+int main()
+{
+    ofstream salida;
+    salida.open(NOM_SALIDA);
+    if ( !salida )
+        cerr << NOM_SALIDA << ": Error al crear el archivo." << endl;
+    else
+    {
+        GeneraTriangulo(TAM,salida);
+        salida.close();
+    }
+    
+    return 0;
+}
+
+/**
+ * @brief Genera los datos para dibujar con gnuplot un cuadrado de lado d pixels
+ * 
+ * @param d [in] tamano de cada lado
+ * @param f [out] archivo de salida
+ */
+void GeneraCuadrado(double d, ofstream& f)
+{
+    Ubicacion e; //ubicacion espacial
+	double dx,dy; //desplazamiento del final del segmento respecto al inicio
+	
+    //posicion inicial y orientacion del primer segmento
+    e.SetUbicacion(X_INI,Y_INI,M_PI/2);
+    
+    for (unsigned i=0;i<4;i++) //para los 4 segmentos
+    {
+        //Así se "pinta" un segmento
+        //calcular desplazamiento del final del segmento en funcion de la orientacion del Ubicacion
+        dx = d*cos(e.GetAngulo()); //desplazamiento en x
+        dy = d*sin(e.GetAngulo()); //desplazamiento en y
+        //escribir datos del segmento, inicio y desplazamiento del final
+        f << e.GetX()  << "\t" << e.GetY() << "\t" << dx << "\t" << dy << endl;
+        //mover el ubicacion al final del segmento grabado
+        e.Desplazar(d);
+        //girar el ubicacion para el siguiente segmento. Esto depende de la figura que se quiere generar
+        e.Girar(- M_PI/2);
+    }
+}
+
+void GeneraTriangulo(double d, ofstream& f)
+{
+    Ubicacion e; //ubicacion espacial
+	double dx,dy; //desplazamiento del final del segmento respecto al inicio
+	
+    //posicion inicial y orientacion del primer segmento
+    e.SetUbicacion(X_INI,Y_INI,0);
+    
+    for (unsigned i=0;i<3;i++) //para los 3 segmentos
+    {
+        //Así se "pinta" un segmento
+        //calcular desplazamiento del final del segmento en funcion de la orientacion del Ubicacion
+        dx = d*cos(e.GetAngulo()); //desplazamiento en x
+        dy = d*sin(e.GetAngulo()); //desplazamiento en y
+        //escribir datos del segmento, inicio y desplazamiento del final
+        f << e.GetX()  << "\t" << e.GetY() << "\t" << dx << "\t" << dy << endl;
+        //mover el ubicacion al final del segmento grabado
+        e.Desplazar(d);
+        //girar el ubicacion para el siguiente segmento. Esto depende de la figura que se quiere generar
+        e.Girar(2*M_PI/ 3);
+    }
+}
+
+
+
